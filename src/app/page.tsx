@@ -39,7 +39,8 @@ import {
   PenTool,
   Link as LinkIcon,
   BarChart3,
-  ScanText
+  ScanText,
+  Download as DownloadIcon
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ChatPanel } from '@/components/chat-panel'
@@ -47,6 +48,7 @@ import { DiscoverPanel } from '@/components/discover-panel'
 import { AIWritePanel } from '@/components/ai-write-panel'
 import { StatsPanel } from '@/components/stats-panel'
 import { BatchImport } from '@/components/batch-import'
+import { CrawlerPanel } from '@/components/crawler-panel'
 
 // Types
 type MaterialType = 'TEXT' | 'LINK' | 'IMAGE' | 'INSPIRATION'
@@ -99,6 +101,7 @@ export default function Home() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [showDiscover, setShowDiscover] = useState(false)
   const [showStats, setShowStats] = useState(false)
+  const [showCrawler, setShowCrawler] = useState(false)
 
   // Form states
   const [textForm, setTextForm] = useState({ title: '', content: '' })
@@ -405,6 +408,7 @@ export default function Home() {
                 setShowDiscover(false)
                 setSelectedType('')
                 setShowFavorites(false)
+                setShowCrawler(false)
               }}
               className={cn(
                 "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
@@ -417,6 +421,27 @@ export default function Home() {
               <span className="flex-1">素材统计</span>
             </button>
 
+            {/* Crawler */}
+            <button
+              onClick={() => {
+                setShowCrawler(true)
+                setShowDiscover(false)
+                setShowStats(false)
+                setSelectedType('')
+                setShowFavorites(false)
+              }}
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
+                showCrawler
+                  ? "bg-purple-100 text-purple-900"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+            >
+              <DownloadIcon className="w-5 h-5" />
+              <span className="flex-1">内容抓取</span>
+              <Badge className="bg-purple-500 text-white text-[10px]">新</Badge>
+            </button>
+
             {/* All Materials */}
             <button
               onClick={() => {
@@ -424,10 +449,11 @@ export default function Home() {
                 setShowFavorites(false)
                 setShowDiscover(false)
                 setShowStats(false)
+                setShowCrawler(false)
               }}
               className={cn(
                 "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
-                !selectedType && !showFavorites && !showDiscover && !showStats
+                !selectedType && !showFavorites && !showDiscover && !showStats && !showCrawler
                   ? "bg-gray-100 text-gray-900"
                   : "text-gray-600 hover:bg-gray-50"
               )}
@@ -444,6 +470,7 @@ export default function Home() {
                 setSelectedType('')
                 setShowDiscover(false)
                 setShowStats(false)
+                setShowCrawler(false)
               }}
               className={cn(
                 "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
@@ -472,6 +499,7 @@ export default function Home() {
                   setShowFavorites(false)
                   setShowDiscover(false)
                   setShowStats(false)
+                  setShowCrawler(false)
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
@@ -793,6 +821,8 @@ export default function Home() {
           }} />
         ) : showStats ? (
           <StatsPanel />
+        ) : showCrawler ? (
+          <CrawlerPanel onSaved={fetchMaterials} />
         ) : (
         <ScrollArea className="flex-1 p-6">
           {/* Active Filters */}
