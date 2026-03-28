@@ -37,12 +37,16 @@ import {
   Download,
   Folder,
   PenTool,
-  Link as LinkIcon
+  Link as LinkIcon,
+  BarChart3,
+  ScanText
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ChatPanel } from '@/components/chat-panel'
 import { DiscoverPanel } from '@/components/discover-panel'
 import { AIWritePanel } from '@/components/ai-write-panel'
+import { StatsPanel } from '@/components/stats-panel'
+import { BatchImport } from '@/components/batch-import'
 
 // Types
 type MaterialType = 'TEXT' | 'LINK' | 'IMAGE' | 'INSPIRATION'
@@ -94,6 +98,7 @@ export default function Home() {
   const [sortBy, setSortBy] = useState<'createdAt' | 'updatedAt'>('createdAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [showDiscover, setShowDiscover] = useState(false)
+  const [showStats, setShowStats] = useState(false)
 
   // Form states
   const [textForm, setTextForm] = useState({ title: '', content: '' })
@@ -102,6 +107,8 @@ export default function Home() {
   const [linkParsing, setLinkParsing] = useState(false)
   const [imageForm, setImageForm] = useState({ title: '', file: null as File | null })
   const [imageUploading, setImageUploading] = useState(false)
+  const [ocrLoading, setOcrLoading] = useState(false)
+  const [ocrResult, setOcrResult] = useState<string | null>(null)
 
   // AI states
   const [aiLoading, setAiLoading] = useState<string | null>(null)
@@ -377,6 +384,7 @@ export default function Home() {
                 setShowDiscover(true)
                 setSelectedType('')
                 setShowFavorites(false)
+                setShowStats(false)
               }}
               className={cn(
                 "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
@@ -390,16 +398,36 @@ export default function Home() {
               <Sparkles className="w-4 h-4 text-emerald-500" />
             </button>
 
+            {/* Stats */}
+            <button
+              onClick={() => {
+                setShowStats(true)
+                setShowDiscover(false)
+                setSelectedType('')
+                setShowFavorites(false)
+              }}
+              className={cn(
+                "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
+                showStats
+                  ? "bg-blue-100 text-blue-900"
+                  : "text-gray-600 hover:bg-gray-50"
+              )}
+            >
+              <BarChart3 className="w-5 h-5" />
+              <span className="flex-1">素材统计</span>
+            </button>
+
             {/* All Materials */}
             <button
               onClick={() => {
                 setSelectedType('')
                 setShowFavorites(false)
                 setShowDiscover(false)
+                setShowStats(false)
               }}
               className={cn(
                 "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
-                !selectedType && !showFavorites && !showDiscover
+                !selectedType && !showFavorites && !showDiscover && !showStats
                   ? "bg-gray-100 text-gray-900"
                   : "text-gray-600 hover:bg-gray-50"
               )}
@@ -415,6 +443,7 @@ export default function Home() {
                 setShowFavorites(true)
                 setSelectedType('')
                 setShowDiscover(false)
+                setShowStats(false)
               }}
               className={cn(
                 "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
@@ -442,6 +471,7 @@ export default function Home() {
                   setSelectedType(type)
                   setShowFavorites(false)
                   setShowDiscover(false)
+                  setShowStats(false)
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-colors",
@@ -507,6 +537,8 @@ export default function Home() {
           </div>
 
           {/* Add Button */}
+          <BatchImport onImported={fetchMaterials} />
+          
           <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
             <DialogTrigger asChild>
               <Button className="bg-emerald-500 hover:bg-emerald-600 text-white gap-2">
@@ -651,6 +683,64 @@ export default function Home() {
                       </label>
                     </div>
                   </div>
+                  
+                  {/* OCR 识别按钮 */}
+                  {imageForm.file && (
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        className="flex-1"
+                        onClick={async () => {
+                          if (!imageForm.file) return
+                          setOcrLoading(true)
+                          setOcrResult(null)
+                          try {
+                            const formData = new FormData()
+                            formData.append('file', imageForm.file)
+                            const res = await fetch('/api/ocr', {
+                              method: 'POST',
+                              body: formData
+                            })
+                            const data = await res.json()
+                            if (data.success) {
+                              setOcrResult(data.text)
+                            }
+                          } catch (e) {
+                            console.error('OCR error:', e)
+                          } finally {
+                            setOcrLoading(false)
+                          }
+                        }}
+                        disabled={ocrLoading}
+                      >
+                        {ocrLoading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                            识别中...
+                          </>
+                        ) : (
+                          <>
+                            <ScanText className="w-4 h-4 mr-2" />
+                            OCR识别文字
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+                  
+                  {/* OCR 结果 */}
+                  {ocrResult && (
+                    <div>
+                      <Label className="text-sm text-gray-500">识别结果</Label>
+                      <Textarea
+                        value={ocrResult}
+                        onChange={e => setOcrResult(e.target.value)}
+                        rows={4}
+                        className="mt-1 text-sm"
+                      />
+                    </div>
+                  )}
+                  
                   <Button
                     className="w-full bg-emerald-500 hover:bg-emerald-600"
                     onClick={uploadImage}
@@ -701,6 +791,8 @@ export default function Home() {
             fetchMaterials()
             setShowDiscover(false)
           }} />
+        ) : showStats ? (
+          <StatsPanel />
         ) : (
         <ScrollArea className="flex-1 p-6">
           {/* Active Filters */}
