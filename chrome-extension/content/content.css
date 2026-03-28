@@ -1,0 +1,216 @@
+/* 素材灵感助手 - Content Styles */
+
+/* 浮动收藏按钮 */
+#material-assist-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 100px;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+  transition: all 0.3s ease;
+  z-index: 999999;
+}
+
+#material-assist-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+}
+
+/* 选中文本收藏按钮 */
+#ma-selection-btn {
+  background: #10b981;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 999999;
+  transition: all 0.2s;
+}
+
+#ma-selection-btn:hover {
+  background: #059669;
+}
+
+/* 快速保存弹窗 */
+#material-quick-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999999;
+  animation: ma-fadeIn 0.2s ease;
+}
+
+@keyframes ma-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.ma-modal-content {
+  background: white;
+  border-radius: 12px;
+  width: 380px;
+  max-width: 90vw;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: ma-slideUp 0.3s ease;
+}
+
+@keyframes ma-slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ma-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ma-modal-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.ma-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #9ca3af;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+.ma-close-btn:hover {
+  color: #374151;
+}
+
+.ma-modal-body {
+  padding: 20px;
+}
+
+.ma-form-group {
+  margin-bottom: 16px;
+}
+
+.ma-form-group:last-child {
+  margin-bottom: 0;
+}
+
+.ma-form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.ma-form-group input,
+.ma-form-group select,
+.ma-form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #111827;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.ma-form-group input:focus,
+.ma-form-group select:focus,
+.ma-form-group textarea:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.ma-form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.ma-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 20px;
+  border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+  border-radius: 0 0 12px 12px;
+}
+
+.ma-btn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.ma-btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.ma-btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+.ma-btn-primary {
+  background: #10b981;
+  color: white;
+}
+
+.ma-btn-primary:hover {
+  background: #059669;
+}
+
+/* Toast 提示 */
+.ma-toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: #1f2937;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 99999999;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.ma-toast.ma-toast-show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

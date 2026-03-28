@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>素材灵感助手 - 设置</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f9fafb;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      font-size: 24px;
+      color: #111827;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 32px;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 16px;
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+    
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    
+    .hint {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background: #10b981;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #059669;
+    }
+    
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #374151;
+    }
+    
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    
+    .status {
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+    
+    .status.success {
+      background: #ecfdf5;
+      color: #065f46;
+    }
+    
+    .status.error {
+      background: #fef2f2;
+      color: #991b1b;
+    }
+    
+    .feature-list {
+      list-style: none;
+    }
+    
+    .feature-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid #f3f4f6;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .feature-list li:last-child {
+      border-bottom: none;
+    }
+    
+    .feature-icon {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <span>✨</span>
+      素材灵感助手
+    </h1>
+    <p class="subtitle">Chrome 浏览器插件 - 一键收藏网页内容到素材库</p>
+    
+    <div class="card">
+      <h2 class="card-title">⚙️ 服务器设置</h2>
+      <div class="form-group">
+        <label for="apiUrl">API 服务地址</label>
+        <input type="text" id="apiUrl" placeholder="http://localhost:3000" />
+        <p class="hint">素材库后端服务地址，默认为本地服务</p>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="saveBtn">保存设置</button>
+        <button class="btn btn-secondary" id="testBtn">测试连接</button>
+      </div>
+      <div id="status"></div>
+    </div>
+    
+    <div class="card">
+      <h2 class="card-title">🚀 功能说明</h2>
+      <ul class="feature-list">
+        <li>
+          <span class="feature-icon">📄</span>
+          <span>右键收藏当前页面</span>
+        </li>
+        <li>
+          <span class="feature-icon">📝</span>
+          <span>选中文字快速收藏</span>
+        </li>
+        <li>
+          <span class="feature-icon">🖼️</span>
+          <span>右键收藏图片</span>
+        </li>
+        <li>
+          <span class="feature-icon">🔗</span>
+          <span>右键收藏链接</span>
+        </li>
+        <li>
+          <span class="feature-icon">💬</span>
+          <span>浮动快捷按钮</span>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="card">
+      <h2 class="card-title">📖 使用说明</h2>
+      <p style="color: #6b7280; font-size: 14px; line-height: 1.6;">
+        1. 安装插件后，确保素材库服务正在运行<br>
+        2. 点击浏览器工具栏图标可快速收藏当前页面<br>
+        3. 选中网页文字后，可右键选择"收藏选中文字"<br>
+        4. 在图片上右键，可选择"收藏图片"<br>
+        5. 所有收藏的内容都会同步到素材库
+      </p>
+    </div>
+  </div>
+  
+  <script src="popup/options.js"></script>
+</body>
+</html>
