@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 素材类型枚举
+enum MaterialType {
+  TEXT        // 手动粘贴文本
+  LINK        // 网页链接
+  IMAGE       // 截图/图片
+  INSPIRATION // 灵感速记
+}
+
+// 文件夹/笔记本表
+model Folder {
+  id          String     @id @default(cuid())
+  name        String     // 文件夹名称
+  icon        String?    @default("📁") // 图标
+  color       String?    @default("#6366f1") // 颜色
+  description String?    // 描述
+  parentId    String?    // 父文件夹ID，支持嵌套
+  sortOrder   Int        @default(0) // 排序
+  
+  // 关联
+  materials   Material[]
+  children    Folder[]   @relation("FolderHierarchy")
+  parent      Folder?    @relation("FolderHierarchy", fields: [parentId], references: [id])
+  
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  @@index([parentId])
+}
+
+// 素材表
+model Material {
+  id              String       @id @default(cuid())
+  type            MaterialType
+  
+  // 基础信息
+  title           String       // 标题（自动生成或手动输入）
+  content         String?      // 正文内容
+  sourceUrl       String?      // 来源链接
+  images          String?      // 图片路径，JSON 数组字符串
+  
+  // OCR 结果
+  ocrText         String?      // OCR 识别的文字
+  
+  // 分类与标签
+  tags            String?      // 用户标签，JSON 数组字符串
+  folderId        String?      // 所属文件夹
+  
+  // AI 加工结果
+  summary         String?      // AI 摘要
+  aiTags          String?      // AI 建议标签，JSON 数组字符串
+  inspirationHint String?      // AI 灵感方向提示
+  
+  // 状态
+  isFavorite      Boolean      @default(false)
+  isArchived      Boolean      @default(false)
+  
+  // 关联
+  folder          Folder?      @relation(fields: [folderId], references: [id])
+  
+  // 时间戳
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  @@index([type])
+  @@index([isFavorite])
+  @@index([createdAt])
+  @@index([folderId])
+}
+
+// 标签表（用于标签管理）
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  color     String?  // 标签颜色
+  count     Int      @default(0) // 使用次数
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 写作草稿表
+model Draft {
+  id          String   @id @default(cuid())
+  title       String   // 标题
+  content     String   // 内容
+  folderId    String?  // 所属文件夹
+  
+  // AI生成相关
+  prompt      String?  // 使用的提示词
+  sourceIds   String?  // 参考的素材ID，JSON数组
+  
+  // 状态
+  isPublished Boolean  @default(false)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([createdAt])
+}
